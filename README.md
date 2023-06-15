@@ -1,2 +1,2 @@
 # JS-SoftUni
-My Softuni Adventure
+JS-Advanced #SoftUni
