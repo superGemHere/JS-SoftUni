@@ -4,7 +4,7 @@
   "description": "<h1>Here are my JS Web Applications from SoftUni</h1>",
   "main": "index.js",
   "scripts": {
-    "start": "node ./index.js"
+    "start": "nodemon ./index.js"
   },
   "repository": {
     "type": "git",
