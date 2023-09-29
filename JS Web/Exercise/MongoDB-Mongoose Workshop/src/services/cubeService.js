@@ -1,4 +1,4 @@
-const Cube = require('../models/Cube')
+const Cube = require("../models/Cube");
 
 const cubes = [
   {
@@ -19,38 +19,44 @@ const cubes = [
   }
 ];
 
-exports.createCube = async (cubeData) => {
+exports.createCube = async cubeData => {
   const newCube = await Cube.create(cubeData);
-  
+
   // const newCube = new Cube(cubeData);
   // await newCube.save()
 
   return newCube;
 };
 
-exports.getDetails = id => {
-  return cubes.find(cube => cube.id === id);
+exports.getDetails = (id) => Cube.findById(id);
+
+exports.getDetailsLean = id => {
+  return Cube.findById(id).lean();
+  // return cubes.find(cube => cube.id === id);
 };
 
-exports.getAll = (search, from, to) => {
-  let filterCubes = [...cubes];
+exports.getAll = async (search, from, to) => {
+  // let filterCubes = [...cubes];
+  const filterCubes = await Cube.find().lean();
+
+    // TODO: This will be filtered later with mongoose.
   if (search) {
-    filterCubes = filterCubes.filter((cube) => {
-      return cube.name.toLowerCase().includes(search.toLowerCase())
+    filterCubes = filterCubes.filter(cube => {
+      return cube.name.toLowerCase().includes(search.toLowerCase());
     });
-  };
+  }
 
   if (from) {
     filterCubes = filterCubes.filter(cube => {
       return cube.difficultyLevel >= Number(from);
     });
-  };
+  }
 
   if (to) {
     filterCubes = filterCubes.filter(cube => {
       return cube.difficultyLevel <= Number(to);
     });
-  };
+  }
   
   return filterCubes;
 };
