@@ -7,7 +7,7 @@ router.use(homeControler);
 
 router.use('/cubes', cubeControler);
 
-router.use('/acessories', accessoryControler)
+router.use('/accessories', accessoryControler)
 
 
 router.get('*', (req, res) =>{
