@@ -60,3 +60,10 @@ exports.getAll = async (search, from, to) => {
   
   return filterCubes;
 };
+
+exports.attachAccessory = async (cubeId, accessoryId) => {
+  const cube = await this.getDetails(cubeId);
+  cube.accessories.push(accessoryId);
+  return cube.save();
+
+}
