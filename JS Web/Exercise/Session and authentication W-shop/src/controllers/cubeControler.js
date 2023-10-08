@@ -3,7 +3,6 @@ const cubeService = require("../services/cubeService");
 const accessoryService = require("../services/accessoryService");
 
 router.get("/create", (req, res) => {
-  console.log(cubeService.getAll());
   res.render("cube/create");
 });
 router.post("/create", async (req, res) => {

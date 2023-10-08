@@ -6,12 +6,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Password field must be filled!']
-    // validate: {
-    //     validator: function(value){
-    //         return this.repeatPassword === value;
-    //     },
-    //     message: 'Passwords don\'t match.'
-    // }
   },
 });
 
