@@ -11,17 +11,18 @@ router.post("/create", async (req, res) => {
     name,
     description,
     imageUrl,
-    difficultyLevel: Number(difficultyLevel)
+    difficultyLevel: Number(difficultyLevel),
+    owner: req.user.id,
   });
   res.redirect("/");
 });
 
 router.get("/:cubeId/details", async (req, res) => {
   const { cubeId } = req.params;
-  // console.log(cubeId)
+
   const cube = await cubeService.getDetails(cubeId).lean();
   const hasAccessories = cube.accessories?.length > 0;
-  // console.log(cube);
+
   if (!cube) {
     res.redirect("/404");
     return;
