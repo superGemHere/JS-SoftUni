@@ -30,7 +30,10 @@ router.get("/:cubeId/details", async (req, res) => {
     return;
   }
 
-  res.render("cube/details", { ...cube, hasAccessories });
+  const isOwner = cube.owner == req.user.id;
+  console.log(isOwner)
+
+  res.render("cube/details", { ...cube, hasAccessories, isOwner });
 });
 router.get("/:cubeId/attach-accessory", async (req, res) => {
   const { cubeId } = req.params;
