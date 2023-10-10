@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const cubeService = require("../services/cubeService");
 const accessoryService = require("../services/accessoryService");
+const { extractErrorMsg } = require('../utils/errorHelpers');
 
 const { isAuth } = require('../middlewares/authMiddleware')
 
@@ -11,14 +12,19 @@ router.get("/create", isAuth, (req, res) => {
 });
 router.post("/create", isAuth, async (req, res) => {
   const { name, description, imageUrl, difficultyLevel } = req.body;
-  await cubeService.createCube({
-    name,
-    description,
-    imageUrl,
-    difficultyLevel: Number(difficultyLevel),
-    owner: req.user.id,
-  });
-  res.redirect("/");
+  try {
+    await cubeService.createCube({
+      name,
+      description,
+      imageUrl,
+      difficultyLevel: Number(difficultyLevel),
+      owner: req.user.id,
+    });
+    res.redirect("/");
+  } catch (err) {
+    const firstErrorMsg = extractErrorMsg(err);
+    res.status(400).render("cube/create", { errorMessage: firstErrorMsg });
+  }
 });
 
 router.get("/:cubeId/details", async (req, res) => {
@@ -52,12 +58,18 @@ router.get("/:cubeId/attach-accessory", isAuth, async (req, res) => {
   res.render("accessory/attach", { ...cube, accessories, hasAccessories });
 });
 router.post("/:cubeId/attach-accessory", isAuth, async (req, res) => {
-  const { cubeId } = req.params;
-  const { accessory: accessoryId } = req.body;
-
-  await cubeService.attachAccessory(cubeId, accessoryId);
-
-  res.redirect(`/cubes/${cubeId}/details`);
+  try {
+    
+    const { cubeId } = req.params;
+    const { accessory: accessoryId } = req.body;
+    
+    await cubeService.attachAccessory(cubeId, accessoryId);
+    
+    res.redirect(`/cubes/${cubeId}/details`);
+  } catch (err) {
+    const firstErrorMsg = extractErrorMsg(err);
+    res.status(400).render("accessory/attach", { errorMessage: firstErrorMsg });
+  }
 });
 
 router.get('/:cubeId/delete', isAuth, async (req, res) => {
@@ -68,6 +80,7 @@ router.get('/:cubeId/delete', isAuth, async (req, res) => {
   res.render('cube/delete', { cube, options })
 })
 router.post('/:cubeId/delete', isAuth, async (req, res) => {
+  
   await cubeService.delete(req.params.cubeId);
 
   res.redirect('/');
@@ -81,9 +94,15 @@ router.get('/:cubeId/edit', isAuth, async (req, res) => {
   res.render('cube/edit', { cube, options })
 })
 router.post('/:cubeId/edit', isAuth, async (req, res) => {
-  const cubeData = req.body;
-  await cubeService.update(req.params.cubeId, cubeData);
-  res.redirect(`/cubes/${req.params.cubeId}/details`);
+  try {
+    
+    const cubeData = req.body;
+    await cubeService.update(req.params.cubeId, cubeData);
+    res.redirect(`/cubes/${req.params.cubeId}/details`);
+  } catch (err) {
+    const firstErrorMsg = extractErrorMsg(err);
+    res.status(400).render("cube/edit", { errorMessage: firstErrorMsg });
+  }
 })
 
 
